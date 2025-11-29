@@ -413,8 +413,40 @@ async function loadBarangayData(year, week) {
             <table style="width: 100%; border-collapse: collapse; text-align: left;">
                 <thead>
                     <th>Barangay</th>
-                    <th>Attack Rate</th>
-                    <th>Risk Level</th>
+                    <th>Attack Rate
+                        <div class="tooltip">
+                            <i class="fa-regular fa-question-circle"></i>
+
+                            <span class="tooltip-text">
+                                <p>Attack Rate Formula:<br><br>
+                                    (⁤Number of new cases / Population at risk) x 100<br><br>
+                                    <em>Source: San Pablo City Health Office</em>
+                                </p>
+                            </span>
+                        </div>
+                    </th>
+                    <th>Risk Level              
+                        <div class="tooltip">
+                            <i class="fa-regular fa-question-circle"></i>
+
+                            <span class="tooltip-text">
+                                <p>Risk Classification:<br><br>
+                                    High Risk<br>
+                                    Epidemic-level activity, well above<br>baseline; requires at least two<br>consecutive weeks of cases.<br>
+                                    <em>(> μ + 2σ)</em><br><br>
+
+                                    Moderate Risk<br>
+                                    Above-normal activity;<br>upgraded only if cases persist for<br>two consecutive weeks.<br>
+                                    <em>(> μ to ≤ μ + 2σ)</em><br><br>
+
+                                    Low Risk<br>
+                                    Baseline or expected activity; includes<br>isolated cases and non-cases.<br>
+                                    <em>(≤ μ)</em>
+                                </p>
+                                <a href="https://apps.who.int/iris/handle/10665/250240" target="_blank">Go to link</a>
+                            </span>
+                        </div>
+                    </th>
                 </thead>
                 <tbody>
                     ${data.map(b => {

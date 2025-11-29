@@ -125,7 +125,7 @@ header h5 {
     cursor: pointer;
 }
 .info-btn {
-    color:#333;
+    color:#1e3c72;
     border-radius: 50px;
     border-color:#1e3c72;
     width: 25px;
@@ -811,4 +811,45 @@ iframe {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.0);
     z-index: 1003;
+}
+
+
+
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.tooltip .tooltip-text {
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: auto;
+    font-weight: 100;
+    font-size: x-small;
+    background: #e0e7f2;
+    padding: 6px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+    position: absolute;
+    top: 110%;
+    right: 0;
+    transform: none;
+    z-index: 1104;
+    transition: opacity 0.25s ease;
+}
+
+.tooltip:hover .tooltip-text,
+.tooltip .tooltip-text:hover {
+    visibility: visible;
+    opacity: 1;
+}
+.tooltip i {
+    color: #1e3c72;
+    font-size: x-small;
+}
+.tooltip-text a {
+    color: #4da3ff;
+    text-decoration: underline;
 }
