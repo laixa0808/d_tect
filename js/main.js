@@ -1333,8 +1333,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // Render bar barangay
         async function renderBreakdownChart(year) {
             const breakdownData = await fetchBreakdown(year);
-            const labels = Object.keys(breakdownData).sort();
-            const data = Object.values(breakdownData).map(safeNum);
+
+            const sortedEntries = Object.entries(breakdownData).sort((a, b) =>
+                a[0].localeCompare(b[0])
+            );
+            const labels = sortedEntries.map(e => e[0]);
+            const data = sortedEntries.map(e => safeNum(e[1]));
 
             if (breakdownChart) breakdownChart.destroy();
 
@@ -1347,14 +1351,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     datasets: [{
                         label: `Cases (${year})`,
                         data,
-                        backgroundColor: "#1e3c72"
+                        backgroundColor: "#1e3c72",
+                        minBarLength: 3
                     }]
                 },
                 options: {
                     responsive: true,
                     plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true } }, 
-                    scales: { x: { display: false } }
+                    scales: { y: { beginAtZero: true }, x: { display: false }}
                 }
             });
             return breakdownData; 
