@@ -135,38 +135,38 @@ document.addEventListener('DOMContentLoaded', () => {
                     
             const allBarangayOption = document.createElement("div");
             allBarangayOption.innerHTML = `
-                <label><input type="checkbox" value="All" checked> All</label>
+                <label><input type="checkbox" value="All"> All</label>
             `;
             barangayContainer.appendChild(allBarangayOption);
 
             allowedBarangays.forEach((b) => {
                 const div = document.createElement("div");
-                div.innerHTML = `<label><input type="checkbox" value="${b}" checked> ${b}</label>`;
+                div.innerHTML = `<label><input type="checkbox" value="${b}"> ${b}</label>`;
                 barangayContainer.appendChild(div);
             });
 
             const currentYear = new Date().getFullYear();
             const allYearOption = document.createElement("div");
             allYearOption.innerHTML = `
-                <label><input type="checkbox" value="All" checked> All</label>
+                <label><input type="checkbox" value="All"> All</label>
             `;
             yearContainer.appendChild(allYearOption);
 
             for (let y = 2021; y <= currentYear; y++) {
                 const div = document.createElement("div");
-                div.innerHTML = `<label><input type="checkbox" value="${y}" checked> ${y}</label>`;
+                div.innerHTML = `<label><input type="checkbox" value="${y}"> ${y}</label>`;
                 yearContainer.appendChild(div);
             }
 
             const allWeekOption = document.createElement("div");
             allWeekOption.innerHTML = `
-                <label><input type="checkbox" value="All" checked> All</label>
+                <label><input type="checkbox" value="All"> All</label>
             `;
             weekContainer.appendChild(allWeekOption);
 
             for (let w = 1; w <= 52; w++) {
                 const div = document.createElement("div");
-                div.innerHTML = `<label><input type="checkbox" value="${w}" checked> Week ${w}</label>`;
+                div.innerHTML = `<label><input type="checkbox" value="${w}"> Week ${w}</label>`;
                 weekContainer.appendChild(div);
             }
             ["filterBarangay", "filterYear", "filterWeek"].forEach(id => {
