@@ -631,6 +631,10 @@ iframe {
         min-width: 150px;
         height: 200px;
     }
+    #sort-options label {
+        font-size: x-small;
+        margin: 0 5px 0 5px;
+    }
     .section-title, #forecast-barangay, #barangay-search,
     #barangay-details h3, #barangay-details th, #barangay-details td, .message h1  {
         font-size: large;
