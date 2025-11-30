@@ -1330,13 +1330,26 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        // Bar radiobutton
+        let sortType = "alpha";
+        document.querySelectorAll('input[name="sortType"]').forEach(radio => {
+            radio.addEventListener("change", () => {
+                sortType = radio.value;
+                renderBreakdownChart(yearSelect.value);
+            });
+        });
+
         // Render bar barangay
         async function renderBreakdownChart(year) {
             const breakdownData = await fetchBreakdown(year);
 
-            const sortedEntries = Object.entries(breakdownData).sort((a, b) =>
-                a[0].localeCompare(b[0])
-            );
+            let sortedEntries = Object.entries(breakdownData);
+
+            if (sortType === "alpha") {
+                sortedEntries.sort((a, b) => a[0].localeCompare(b[0]));
+            } else if (sortType === "cases") {
+                sortedEntries.sort((a, b) => safeNum(b[1]) - safeNum(a[1]));
+            }
             const labels = sortedEntries.map(e => e[0]);
             const data = sortedEntries.map(e => safeNum(e[1]));
 
