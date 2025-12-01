@@ -402,7 +402,7 @@ async function loadBarangayData(year, week) {
             `San Pablo City as of ${latest.Month} ${latest.Year}, Week ${latest.Week}`;
 
         // Table
-        const listContainer = document.getElementById('barangay-list');
+        const listContainer = document.getElementById('barangay-list-table');
 
         data.sort((a, b) => {
             if (b.attack_rate !== a.attack_rate) return b.attack_rate - a.attack_rate;
@@ -410,60 +410,19 @@ async function loadBarangayData(year, week) {
         });
 
         listContainer.innerHTML = `
-            <table style="width: 100%; border-collapse: collapse; text-align: left;">
-                <thead>
-                    <th>Barangay</th>
-                    <th>Attack Rate
-                        <div class="tooltip">
-                            <i class="fa-regular fa-question-circle"></i>
+            ${data.map(b => {
+                let color = '';
+                if (b.risk_classification === 'Low Risk') color = '#2ECC71';
+                else if (b.risk_classification === 'Moderate Risk') color = '#FFD700';
+                else if (b.risk_classification === 'High Risk') color = '#FF6347';
 
-                            <span class="tooltip-text">
-                                <p>Attack Rate Formula:<br><br>
-                                    (⁤Number of new cases / Population at risk) x 100<br><br>
-                                    <em>Source: San Pablo City Health Office</em>
-                                </p>
-                            </span>
-                        </div>
-                    </th>
-                    <th>Risk Level              
-                        <div class="tooltip">
-                            <i class="fa-regular fa-question-circle"></i>
-
-                            <span class="tooltip-text">
-                                <p>Risk Classification:<br><br>
-                                    High Risk<br>
-                                    Epidemic-level activity, well above<br>baseline; requires at least two<br>consecutive weeks of cases.<br>
-                                    <em>(> μ + 2σ)</em><br><br>
-
-                                    Moderate Risk<br>
-                                    Above-normal activity;<br>upgraded only if cases persist for<br>two consecutive weeks.<br>
-                                    <em>(> μ to ≤ μ + 2σ)</em><br><br>
-
-                                    Low Risk<br>
-                                    Baseline or expected activity; includes<br>isolated cases and non-cases.<br>
-                                    <em>(≤ μ)</em>
-                                </p>
-                                <a href="https://apps.who.int/iris/handle/10665/250240" target="_blank">Go to link</a>
-                            </span>
-                        </div>
-                    </th>
-                </thead>
-                <tbody>
-                    ${data.map(b => {
-                        let color = '';
-                        if (b.risk_classification === 'Low Risk') color = '#2ECC71';
-                        else if (b.risk_classification === 'Moderate Risk') color = '#FFD700';
-                        else if (b.risk_classification === 'High Risk') color = '#FF6347';
-
-                        return `
-                        <tr>
-                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${b.Barangay}</td>
-                            <td style="padding: 8px; border-bottom: 1px solid #ddd;">${b.attack_rate.toFixed(2)}</td>
-                            <td style="padding: 8px; border-bottom: 1px solid #ddd; color: ${color};">${b.risk_classification}</td>
-                        </tr>`;
-                    }).join('')}
-                </tbody>
-            </table>
+                return `
+                <tr>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd;">${b.Barangay}</td>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd;">${b.attack_rate.toFixed(2)}</td>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd; color: ${color};">${b.risk_classification}</td>
+                </tr>`;
+            }).join('')}
         `;
 
         // Search barangay details
@@ -1138,6 +1097,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const infoText = document.getElementById('info-text');
     const guestBtn = document.getElementById('guest-btn');
     const barangayBtn = document.getElementById('barangay-btn');
+    const attackRateBtn = document.getElementById('attack-rate-btn');
+    const riskClassificationBtn = document.getElementById('risk-classification-btn');
     const yearBtn = document.getElementById('year-btn');
     const forecastBtn = document.getElementById('forecast-btn');
     const hospitalBtn = document.getElementById('hospital-btn');
@@ -1175,16 +1136,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Shows info modal when the button is clicked
-    function initializeModal(triggerId, modalElement) {
-        const trigger = document.querySelector(`#${triggerId}, .${triggerId}`);
-        if (trigger && modalElement) {
-            trigger.addEventListener('click', (e) => {
-                e.preventDefault();
-                showModal(modalElement);
-            });
-        }
-    }
     // Show modal with overlay
     guestBtn.addEventListener('click', (e) => {
         e.preventDefault();
@@ -1207,6 +1158,31 @@ document.addEventListener('DOMContentLoaded', () => {
         <br>By selecting a year and week from the dropdown, the map automatically updates to show the risk levels during that selected time. 
         <br>This section also displays a table containing the attack rate and risk classification of every barangay for that week.<br>
         <br>Users can also search for a specific barangay to view its detailed data, including gender distribution and age group breakdown. These results change depending on the selected year and week, making it easy to track changes over time.`;
+        infoModal.style.display = 'flex';
+        overlay.style.display = 'block';
+    });
+    riskClassificationBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        infoTitle.innerHTML = `Risk Classification`;
+        infoText.innerHTML = `High Risk
+        <br>Epidemic-level activity, well above<br>baseline; requires at least two<br>consecutive weeks of cases.
+        <br><em>(> μ + 2σ)</em><br>
+        <br>Moderate Risk
+        <br>Above-normal activity;<br>upgraded only if cases persist for<br>two consecutive weeks.
+        <br><em>(> μ to ≤ μ + 2σ)</em><br>
+        <br>Low Risk
+        <br>Baseline or expected activity; includes<br>isolated cases and non-cases.
+        <br><em>(≤ μ)</em><br>
+        <br>Source:<a href="https://apps.who.int/iris/handle/10665/250240" target="_blank">World Health Organization</a>`;
+        infoModal.style.display = 'flex';
+        overlay.style.display = 'block';
+    });
+    attackRateBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        infoTitle.innerHTML = `Attack Rate`;
+        infoText.innerHTML = `Formula:<br><br>
+        (⁤Number of new cases / Population at risk) x 100<br><br>
+        <em>Source: San Pablo City Health Office</em>`;
         infoModal.style.display = 'flex';
         overlay.style.display = 'block';
     });

@@ -94,7 +94,16 @@
                 <div class="barangay-wrapper">
                     <div class="barangay-map-container">
                         <div id="barangay-map2"></div>
-                        <div id="barangay-list" class="barangay-list"></div>
+                        <div id="barangay-list" class="barangay-list">
+                            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                                <thead>
+                                    <th>Barangay</th>
+                                    <th>Attack Rate <i id="attack-rate-btn" class="fa-regular fa-question-circle"></i></th>
+                                    <th>Risk Level <i id="risk-classification-btn" class="fa-regular fa-question-circle"></i></th>
+                                </thead>
+                                <tbody id="barangay-list-table"></tbody>
+                            </table>
+                        </div>
                     </div>
                     <div class="barangay-card">
                         <div class="search-container">
@@ -235,9 +244,11 @@
     
     <div id="modal-overlay" class="overlay">
         <div id="info-modal" class="modal">
-            <div class="modal-content">
-                <h2 id="info-title">Loading...</h2>
-                <p id="info-text">Loading...</p>
+            <div class="modal-wrapper">
+                <div class="modal-content">
+                    <h4 id="info-title">Loading...</h2>
+                    <p id="info-text">Loading...</p>
+                </div>
             </div>
         </div>
     </div>
