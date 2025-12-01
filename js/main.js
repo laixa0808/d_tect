@@ -1022,7 +1022,6 @@ async function getNearbyHospitals(lat, lon) {
     const filtered = data.filter(h =>
         h.display_name.toLowerCase().includes("san pablo")
     );
-
     
     const hospitalsWithDistance = filtered.map(hospital => {
         const hospitalLat = parseFloat(hospital.lat);
@@ -1140,24 +1139,24 @@ document.addEventListener('DOMContentLoaded', () => {
     guestBtn.addEventListener('click', (e) => {
         e.preventDefault();
         infoTitle.innerHTML = `About the D-TECT`;
-        infoText.innerHTML = `Dengue Tracking and Early Classification Tool <strong>(D-TECT)</strong> is a web-based system designed 
-        to help monitor and analyze dengue incidence, and predict dengue risk in <strong>San Pablo City</strong>.<br>
-        <br>It was developed to track dengue trends, visualize risk levels, and generate forecasts to support early response. 
+        infoText.innerHTML = `<p style="text-indent: 20px">Dengue Tracking and Early Classification Tool <strong>(D-TECT)</strong> is a web-based system designed 
+        to help monitor and analyze dengue incidence, and predict dengue risk in <strong>San Pablo City</strong>.</p>
+        <p style="text-indent: 20px">It was developed to track dengue trends, visualize risk levels, and generate forecasts to support early response. 
         Using machine learning and historical dengue data, D-TECT helps health authorities and the public 
-        stay informed about the weekly dengue situation in the city.<br>
-        <br>The system offers dashboards, risk maps, detailed data summaries, and forecast tools that work together to 
-        support planning, awareness, and community safety.`;
+        stay informed about the weekly dengue situation in the city.</p>
+        <p style="text-indent: 20px">The system offers dashboards, risk maps, detailed data summaries, and forecast tools that work together to 
+        support planning, awareness, and community safety.</p>`;
         infoModal.style.display = 'flex';
         overlay.style.display = 'block';
     });
     barangayBtn.addEventListener('click', (e) => {
         e.preventDefault();
         infoTitle.innerHTML = `Barangays Section`;
-        infoText.innerHTML = `The Barangays section allows users to explore dengue data for previous weeks.<br>
-        <br><strong>How it works:</strong>
-        <br>By selecting a year and week from the dropdown, the map automatically updates to show the risk levels during that selected time. 
-        <br>This section also displays a table containing the attack rate and risk classification of every barangay for that week.<br>
-        <br>Users can also search for a specific barangay to view its detailed data, including gender distribution and age group breakdown. These results change depending on the selected year and week, making it easy to track changes over time.`;
+        infoText.innerHTML = `<p style="text-indent: 20px">The Barangays section allows users to explore dengue data for previous weeks.</p>
+        <strong>How it works:</strong>
+        <p style="text-indent: 20px">By selecting a year and week from the dropdown, the map automatically updates to show the risk levels during that selected time.</p>
+        <p style="text-indent: 20px">This section also displays a table containing the attack rate and risk classification of every barangay for that week.</p>
+        <p style="text-indent: 20px">Users can also search for a specific barangay to view its detailed data, including gender distribution and age group breakdown. These results change depending on the selected year and week, making it easy to track changes over time.</p>`;
         infoModal.style.display = 'flex';
         overlay.style.display = 'block';
     });
@@ -1189,43 +1188,44 @@ document.addEventListener('DOMContentLoaded', () => {
     yearBtn.addEventListener('click', (e) => {
         e.preventDefault();
         infoTitle.innerHTML = `Summary Section`;
-        infoText.innerHTML = `The Summary section gives a broader look at dengue trends across an entire year.<br>
-        <br><strong>How it works:</strong>
-        <br>By choosing a year from the dropdown, users can view the total recorded dengue cases for that year and even all the recorded cases in the system, 
-        a bar graph showing the distribution of cases across barangays, and pie graphs showing the yearly distribution between genders and age groups.<br>
-        <br>This section helps users understand long-term patterns and compare how dengue affects different communities.`;
+        infoText.innerHTML = `<p style="text-indent: 20px">The Summary section gives a broader look at dengue trends across an entire year.</p>
+        <strong>How it works:</strong>
+        <p style="text-indent: 20px">By choosing a year from the dropdown, users can view the total recorded dengue cases for that year and even all the recorded cases in the system, 
+        a bar graph showing the distribution of cases across barangays, and pie graphs showing the yearly distribution between genders and age groups.</p>
+        <p style="text-indent: 20px">This section helps users understand long-term patterns and compare how dengue affects different communities.</p>`;
         infoModal.style.display = 'flex';
         overlay.style.display = 'block';
     });
     forecastBtn.addEventListener('click', (e) => {
         e.preventDefault();
         infoTitle.innerHTML = `Forecast Section`;
-        infoText.innerHTML = `D-TECT uses historical dengue incidence data together with environmental and climatic variables such as rainfall, 
-        temperature, humidity, wind spreed, and wind direction to predict potential risk in the coming weeks.<br>
-        <br>By analyzing past patterns and trends, the model estimates the level of dengue risk 
-        (classified as Low, Moderate, or High) for both barangay-level and citywide forecasts.<br>
-        <br>The system applies time-series and machine learning techniques to identify correlations between climate conditions and dengue transmission, 
-        providing insights for early warning and preventive planning.<br>
-        <br><strong>How it works:</strong>
-        <br>By entering how many weeks they want to forecast, and D-TECT generates two types of forecasts:
-        <br><strong>Citywide Forecast</strong> – Shows the predicted dengue risk for the entire city. 
-        It includes a table showing week ranges and predicted risk levels, along with a line graph for better visualization.
-        <br><strong>Barangay Forecast</strong> – Shows predicted dengue risk for each barangay. 
+        infoText.innerHTML = `<p style="text-indent: 20px">D-TECT uses historical dengue incidence data together with environmental and climatic variables such as rainfall, 
+        temperature, humidity, wind spreed, and wind direction to predict potential risk in the coming weeks.</p>
+        <p style="text-indent: 20px">By analyzing past patterns and trends, the model estimates the level of dengue risk 
+        (classified as Low, Moderate, or High) for both barangay-level and citywide forecasts.</p>
+        <p style="text-indent: 20px">The system applies time-series and machine learning techniques to identify correlations between climate conditions and dengue transmission, 
+        providing insights for early warning and preventive planning.</p>
+        <strong>How it works:</strong>
+        <p style="text-indent: 20px">By entering how many weeks they want to forecast, and D-TECT generates two types of forecasts:</p>
+        <strong>Citywide Forecast</strong> – Shows the predicted dengue risk for the entire city. 
+        It includes a table showing week ranges and predicted risk levels, along with a line graph for better visualization.<br>
+        <strong>Barangay Forecast</strong> – Shows predicted dengue risk for each barangay. 
         The dropdown displays all the weeks selected for forecasting. For each week, 
         users can see a table listing barangays with their predicted risk level and a map with updated risk colors. 
         Clicking on a specific barangay on the map opens a line graph showing the forecast trend for that barangay.<br>
-        <br><strong style="color: #d9534f;">Note:</strong> This system provides predictions based on historical data and observed trends,
-        and the results should be interpreted as estimates rather than exact outcomes.`;
+        <br><strong style="color: #d9534f;">Note:</strong><br>
+        <p style="text-indent: 20px">This system provides predictions based on historical data and observed trends,
+        and the results should be interpreted as estimates rather than exact outcomes.</p>`;
         infoModal.style.display = 'flex';
         overlay.style.display = 'block';
     });
     hospitalBtn.addEventListener('click', (e) => {
         e.preventDefault();
         infoTitle.innerHTML = `San Pablo City Hospitals`;
-        infoText.innerHTML = `<br><strong>How it works:</strong>
-        <br>By placing a pin anywhere on the map, D-TECT will automatically display the nearest hospitals in San Pablo City.<br>
-        <br>A table also shows each hospital’s name, address, and distance from the pinned location.<br>
-        <br>The map helps users visualize how to reach a healthcare facility.`;
+        infoText.innerHTML = `<strong>How it works:</strong>
+        <p style="text-indent: 20px">By placing a pin anywhere on the map, D-TECT will automatically display the nearest hospitals in San Pablo City.</p>
+        <p style="text-indent: 20px">A table also shows each hospital’s name, address, and distance from the pinned location.</p>
+        <p style="text-indent: 20px">The map helps users visualize how to reach a healthcare facility.</p>`;
         infoModal.style.display = 'flex';
         overlay.style.display = 'block';
     });
