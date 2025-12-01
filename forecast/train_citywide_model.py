@@ -69,7 +69,7 @@ def main():
         .reset_index()
     )
     
-    citywide_df["attack_rate"] = (citywide_df["Cases"] / citywide_df["Population"]) * 100,000
+    citywide_df["attack_rate"] = (citywide_df["Cases"] / citywide_df["Population"]) * 100000
 
     mean_rate = citywide_df["attack_rate"].mean()
     std_rate = citywide_df["attack_rate"].std()
