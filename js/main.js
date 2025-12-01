@@ -1164,25 +1164,25 @@ document.addEventListener('DOMContentLoaded', () => {
     riskClassificationBtn.addEventListener('click', (e) => {
         e.preventDefault();
         infoTitle.innerHTML = `Risk Classification`;
-        infoText.innerHTML = `High Risk
-        <br>Epidemic-level activity, well above<br>baseline; requires at least two<br>consecutive weeks of cases.
-        <br><em>(> μ + 2σ)</em><br>
-        <br>Moderate Risk
-        <br>Above-normal activity;<br>upgraded only if cases persist for<br>two consecutive weeks.
-        <br><em>(> μ to ≤ μ + 2σ)</em><br>
-        <br>Low Risk
-        <br>Baseline or expected activity; includes<br>isolated cases and non-cases.
-        <br><em>(≤ μ)</em><br>
-        <br>Source:<a href="https://apps.who.int/iris/handle/10665/250240" target="_blank">World Health Organization</a>`;
+        infoText.innerHTML = `<p style="color: #FF6347; font-weight: bold;">High Risk</p>
+        Epidemic-level activity, well above baseline; requires at least two consecutive weeks of cases.
+        <br><em><p style="text-align: center">(> μ + 2σ)</p></em>
+        <p style="color: #FFD700; font-weight: bold;">Moderate Risk</p>
+        Above-normal activity; upgraded only if cases persist for two consecutive weeks.
+        <em><p style="text-align: center">(> μ to ≤ μ + 2σ)</p></em>
+        <p style="color: #2ECC71; font-weight: bold;">Low Risk</p>
+        Baseline or expected activity; includes<br>isolated cases and non-cases.
+        <em><p style="text-align: center">(≤ μ)</p></em>
+        <em><p style="font-size: x-small; color: #888888;">Source: <a href="https://apps.who.int/iris/handle/10665/250240" target="_blank">World Health Organization</a></p></em>`;
         infoModal.style.display = 'flex';
         overlay.style.display = 'block';
     });
     attackRateBtn.addEventListener('click', (e) => {
         e.preventDefault();
         infoTitle.innerHTML = `Attack Rate`;
-        infoText.innerHTML = `Formula:<br><br>
-        (⁤Number of new cases / Population at risk) x 100<br><br>
-        <em>Source: San Pablo City Health Office</em>`;
+        infoText.innerHTML = `Formula:
+        <br><p style="text-align: center;">(Number of new cases / Population at risk) x 100</p>
+        <br><em><p style="font-size: x-small; color: #888888;">Source: San Pablo City Health Office</p></em>`;
         infoModal.style.display = 'flex';
         overlay.style.display = 'block';
     });
