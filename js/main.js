@@ -325,7 +325,7 @@ async function loadCurrentBarangayMap() {
         legend.onAdd = function () {
             const div = L.DomUtil.create('div', 'info legend');
             const riskLevels = ["Low Risk", "Moderate Risk", "High Risk", "No Data"];
-            const colors = ["#2ECC71", "#FFD700", "#FF6347", "#808080"];  // Add color mapping for each risk level
+            const colors = ["#2ECC71", "#FFD700", "#FF6347", "#808080"];
 
             for (let i = 0; i < riskLevels.length; i++) {
                 div.innerHTML += `
@@ -605,7 +605,7 @@ async function loadBarangayRiskMap(year, week) {
         legend.onAdd = function () {
             const div = L.DomUtil.create('div', 'info legend');
             const riskLevels = ["Low Risk", "Moderate Risk", "High Risk", "No Data"];
-            const colors = ["#2ECC71", "#FFD700", "#FF6347", "#808080"];  // Add color mapping for each risk level
+            const colors = ["#2ECC71", "#FFD700", "#FF6347", "#808080"];
 
             for (let i = 0; i < riskLevels.length; i++) {
                 div.innerHTML += `
