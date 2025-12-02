@@ -719,6 +719,7 @@ iframe {
     top: 0;
     width: 100vw;
     height: 100vh;
+    margin: 20px;
     overflow: hidden;
     background-color: rgba(0, 0, 0, 0.6);
     align-items: center;
