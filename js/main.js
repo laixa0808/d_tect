@@ -615,16 +615,10 @@ async function loadBarangayRiskMap(year, week) {
 
             riskLevels.forEach((level, i) => {
                 div.innerHTML += `
-                    <div style="margin-bottom:4px;">
-                        <i style="
-                            background:${colors[i]};
-                            width:12px; height:12px; 
-                            display:inline-block;
-                            border:1px solid #000;
-                            margin-right:4px;
-                        "></i>
-                        ${level}
-                    </div>
+                    <span style="display: inline-flex; align-items: center; margin-right: 10px;">
+                        <i style="background:${colors[i]}; border:1px solid #000; width:10px; height:10px; display:inline-block; margin-right:3px;"></i>
+                        ${riskLevels[i]}
+                    </span>
                 `;
             });
             return div;
