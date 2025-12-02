@@ -35,7 +35,7 @@ def get_iso_weeks(year):
     return date(year, 12, 28).isocalendar()[1]
 
 # =========Citywide=========
-def generate_citywide_forecast(num_weeks, model, le_risk):
+def generate_citywide_forecast(num_weeks, model, preprocessor):
     pop_df = fetch_table("population_records")
     weather_df = fetch_table("weather_records")
 
@@ -50,10 +50,13 @@ def generate_citywide_forecast(num_weeks, model, le_risk):
         while week > max_week:
             week -= max_week
             year += 1
+        iso_date = datetime.fromisocalendar(year, week, 1)
+        month = iso_date.strftime("%B")
 
         population = pop_df["Population"].sum()
         future_weeks_list.append({
             "Year": year,
+            "Month": month,
             "Week": week,
             "Population": population
         })
@@ -70,9 +73,21 @@ def generate_citywide_forecast(num_weeks, model, le_risk):
 
     future_weather = future_weeks.merge(weekly_avg_weather, on="Week", how="left")
 
-    pred_encoded = model.predict(future_weather)
-    pred_label = le_risk.inverse_transform(pred_encoded)
-    future_weather["predicted_risk"] = pred_label
+    feature_cols = [
+        "Year", "Month", "Week", "Population",
+        "average_weekly_temperature",
+        "average_weekly_relative_humidity",
+        "total_weekly_rainfall",
+        "average_weekly_wind_speed",
+        "average_weekly_wind_direction"
+    ]
+    future_weather = future_weather[feature_cols]
+    future_weather_processed = preprocessor.transform(future_weather)
+
+    pred_encoded = model.predict(future_weather_processed)
+    
+    risk_map_inv = {0: "Low Risk", 1: "Moderate Risk", 2: "High Risk"}
+    future_weather["predicted_risk"] = [risk_map_inv[i] for i in pred_encoded]
 
     def week_start_end(y, w):
         start = datetime.fromisocalendar(y, w, 1)
@@ -147,8 +162,8 @@ def main(mode="barangay", num_weeks=10):
 
     if mode == "citywide":
         model = joblib.load("forecast/model_citywide.joblib")
-        le_risk = joblib.load("forecast/le_risk_citywide.joblib")
-        forecast_df = generate_citywide_forecast(num_weeks, model, le_risk)
+        preprocessor = joblib.load("forecast/preprocessor_citywide.joblib")
+        forecast_df = generate_citywide_forecast(num_weeks, model, preprocessor)
     else:
         model = joblib.load("forecast/model_barangay.joblib")
         le_barangay = joblib.load("forecast/le_barangay.joblib")

@@ -2,10 +2,11 @@ import warnings
 warnings.filterwarnings("ignore")
 
 from supabase import create_client
-from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.compose import ColumnTransformer
 from collections import Counter
 from imblearn.over_sampling import SMOTE
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 from xgboost import XGBClassifier
 import pandas as pd
 import joblib
@@ -56,7 +57,7 @@ def main():
     )
 
     citywide_df = (
-        merged.groupby(["Year", "Week"])
+        merged.groupby(["Year", "Month", "Week"])
         .agg({
             "Cases": "sum",
             "Population": "sum",
@@ -69,7 +70,7 @@ def main():
         .reset_index()
     )
     
-    citywide_df["attack_rate"] = (citywide_df["Cases"] / citywide_df["Population"]) * 100000
+    citywide_df["attack_rate"] = (citywide_df["Cases"] / citywide_df["Population"]) * 10000
 
     mean_rate = citywide_df["attack_rate"].mean()
     std_rate = citywide_df["attack_rate"].std()
@@ -85,58 +86,54 @@ def main():
     citywide_df["risk_classification"] = citywide_df["attack_rate"].apply(
         lambda r: classify_risk(r, mean_rate, std_rate)
     )
+    label_map = {"Low Risk":0, "Moderate Risk":1, "High Risk":2}
+    citywide_df['risk_code'] = citywide_df['risk_classification'].map(label_map)
 
     X = citywide_df[[
-        "Year", "Week", "Population",
+        "Year", "Month", "Week", "Population",
         "average_weekly_temperature",
         "average_weekly_relative_humidity",
         "total_weekly_rainfall",
         "average_weekly_wind_speed",
         "average_weekly_wind_direction"
     ]]
-    y = citywide_df["risk_classification"]
+    y = citywide_df["risk_code"]
 
-    le_risk = LabelEncoder()
-    y_encoded = le_risk.fit_transform(y)
+    categorical_cols = X.select_dtypes(include=['object','category']).columns.tolist()
+    numeric_cols = X.select_dtypes(include=['int64','float64']).columns.tolist()
 
-    class_counts = Counter(y_encoded)
-    print("Class distribution:", class_counts)
+    try:
+        ohe = OneHotEncoder(sparse_output=False, handle_unknown='ignore')
+    except TypeError:
+        ohe = OneHotEncoder(sparse=False, handle_unknown='ignore')
+    
+    preprocessor = ColumnTransformer([
+        ('num', StandardScaler(), numeric_cols),
+        ('cat', ohe, categorical_cols)
+    ])
 
-    # --- If any class has < 2 samples, skip stratification ---
-    if min(class_counts.values()) < 2:
-        print(" Some classes have fewer than 2 samples. Using non-stratified split.")
-        stratify_train = None
-        stratify_val = None
-    else:
-        stratify_train = y_encoded
-        stratify_val = y_encoded
+    X_processed = preprocessor.fit_transform(X)
 
-    X_train, X_temp, y_train, y_temp = train_test_split(
-        X, y_encoded, test_size=0.2, random_state=42, stratify=stratify_train
-    )
-
-    temp_counts = Counter(y_temp)
-    if len(temp_counts) < len(class_counts) or min(temp_counts.values()) < 2:
-        print(" Validation/test set too small for stratification. Using regular split.")
-        stratify_val = None
-    else:
-        stratify_val = y_temp
-
-    X_val, X_test, y_val, y_test = train_test_split(
-        X_temp, y_temp, test_size=0.5, random_state=42, stratify=stratify_val
-    )
+    class_counts = Counter(y)
 
     n_neighbors = 3
     if min(class_counts.values()) >= n_neighbors:
         smote = SMOTE(random_state=42, k_neighbors=n_neighbors)
-        X_balanced, y_balanced = smote.fit_resample(X_train, y_train)
+        X_balanced, y_balanced = smote.fit_resample(X_processed, y)
     else:
         print("Skipping SMOTE due to insufficient samples in one or more classes.")
-        X_balanced, y_balanced = X_train, y_train
+        X_balanced, y_balanced = X_processed, y
 
+    X_train, X_temp, y_train, y_temp = train_test_split(
+        X_balanced, y_balanced, test_size=0.3, stratify=y_balanced, random_state=42
+    )
+    X_val, X_test, y_val, y_test = train_test_split(
+        X_temp, y_temp, test_size=0.5, stratify=y_temp, random_state=42
+    )
+    
     model = XGBClassifier(
-        objective="multi:softmax",
-        num_class=len(le_risk.classes_),
+        objective="multi:softprob",
+        num_class=citywide_df['risk_code'].nunique(),
         n_estimators=300,
         learning_rate=0.05,
         max_depth=5,
@@ -145,15 +142,21 @@ def main():
         eval_metric="mlogloss",
         random_state=42
     )
-    model.fit(
-        X_balanced, y_balanced,
-        eval_set=[(X_val, y_val)],
-        verbose=False
-    )
+    param_grid = {
+        'max_depth':[3,5,7],
+        'learning_rate':[0.05,0.1],
+        'n_estimators':[100,200],
+        'reg_alpha':[0,0.1]
+    }
+        
+    grid = GridSearchCV(model, param_grid, scoring='balanced_accuracy', cv=3, n_jobs=-1, verbose=0)
+    grid.fit(X_train, y_train)
+
+    best_xgb = grid.best_estimator_
 
     os.makedirs("forecast", exist_ok=True)
-    joblib.dump(model, "forecast/model_citywide.joblib")
-    joblib.dump(le_risk, "forecast/le_risk_citywide.joblib")
+    joblib.dump(best_xgb, "forecast/model_citywide.joblib")
+    joblib.dump(preprocessor, "forecast/preprocessor_citywide.joblib")
 
     print("Citywide model training completed and saved successfully.")
 

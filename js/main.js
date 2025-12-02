@@ -320,6 +320,26 @@ async function loadCurrentBarangayMap() {
             }
         }).addTo(map1);
 
+        const legend = L.control({ position: 'bottomright' });
+
+        legend.onAdd = function () {
+            const div = L.DomUtil.create('div', 'info legend');
+            const riskLevels = ["Low Risk", "Moderate Risk", "High Risk", "No Data"];
+            const colors = ["#2ECC71", "#FFD700", "#FF6347", "#808080"];  // Add color mapping for each risk level
+
+            for (let i = 0; i < riskLevels.length; i++) {
+                div.innerHTML += `
+                    <span style="display: inline-flex; align-items: center; margin-right: 10px;">
+                        <i style="background:${colors[i]}; border:1px solid #000; width:10px; height:10px; display:inline-block; margin-right:3px;"></i>
+                        ${riskLevels[i]}
+                    </span>
+                `;
+            }
+
+            return div;
+        };
+
+        legend.addTo(map1);
     } catch (err) {
         console.error('Error loading static barangay map:', err);
     }
@@ -580,6 +600,26 @@ async function loadBarangayRiskMap(year, week) {
             }
         }).addTo(barangayRiskMap);
 
+        const legend = L.control({ position: 'bottomright' });
+
+        legend.onAdd = function () {
+            const div = L.DomUtil.create('div', 'info legend');
+            const riskLevels = ["Low Risk", "Moderate Risk", "High Risk", "No Data"];
+            const colors = ["#2ECC71", "#FFD700", "#FF6347", "#808080"];  // Add color mapping for each risk level
+
+            for (let i = 0; i < riskLevels.length; i++) {
+                div.innerHTML += `
+                    <span style="display: inline-flex; align-items: center; margin-right: 10px;">
+                        <i style="background:${colors[i]}; border:1px solid #000; width:10px; height:10px; display:inline-block; margin-right:3px;"></i>
+                        ${riskLevels[i]}
+                    </span>
+                `;
+            }
+
+            return div;
+        };
+
+        legend.addTo(barangayRiskMap);
     } catch (err) {
         console.error('Error loading barangayRiskMap:', err);
     }
@@ -593,7 +633,6 @@ async function updateTotalCases() {
 
     document.getElementById("total-cases-value").textContent = totalCases.toLocaleString();
 }
-
 
 // =========Forecast Section=========
 let forecastMap, barangayChart, cityChart;
