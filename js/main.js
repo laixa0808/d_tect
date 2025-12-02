@@ -868,9 +868,14 @@ async function displayForecast(barangayForecastData, citywideForecastData) {
         
         // Barangay Chart - Updating
         function updateChart(barangayName) {
-            const barangayData = barangayForecastData.filter(item => item.Barangay === barangayName);
+            function normalizeName(name) {
+                return name.toLowerCase().replace(/[^a-z0-9]/g, ''); // remove spaces, hyphens, parentheses, etc.
+            }
+            const barangayData = barangayForecastData.filter(
+                item => normalizeName(item.Barangay) === normalizeName(barangayName)
+            );
+
             const labels = barangayData.map(d => d.week_range);
-            
             const riskToScore = { "Low Risk": 1, "Moderate Risk": 2, "High Risk": 3 };
             const riskScores = barangayData.map(d => riskToScore[d.predicted_risk] || 0);
 

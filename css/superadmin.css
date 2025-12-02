@@ -298,3 +298,19 @@ button {
 }
 .signup-submit-btn, .reset-btn { background-color: #e1f2e0 ; color: #178244; transition: all 0.3s ease-in; }
 .signup-submit-btn:hover, .reset-btn:hover { background-color: #d3e8d3; }
+
+
+/* Scrollbar */
+::-webkit-scrollbar { height: 10px; width: 10px; }
+::-webkit-scrollbar-track { background: #e6ebf7; border-radius: 10px; }
+::-webkit-scrollbar-thumb {
+    background: #1e3c72; 
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #577cbd;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
