@@ -322,7 +322,7 @@ thead th {
 #barangay-year-select, #barangay-week-select {
     width: 100%;
     padding: 12px 80px 12px 12px;
-    font-size: 16px;
+    font-size: small;
     box-sizing: border-box;
     border: none;
     border-radius: 8px;
@@ -648,8 +648,8 @@ iframe {
     #barangay-control-container {
         width: 100%;
     }
-    #barangay-control-container select, #year-control-container select {
-        font-size: small;
+    .search-input, #forecast-week-select, #barangay-control-container select, #year-control-container select {
+        font-size: x-small;
     }
     .prevention-content {
         height: 500px;
