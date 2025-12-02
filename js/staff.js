@@ -607,7 +607,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const csv = [
-                "Barangay,Week Range,Predicted Risk",
+                "Area,Week Range,Predicted Risk",
                 ...data.map(
                     (row) => `${row.Barangay || "San Pablo City"},"${row.week_range}","${row.predicted_risk}"`
                 ),
