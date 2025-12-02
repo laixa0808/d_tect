@@ -536,6 +536,8 @@ async function loadBarangayData(year, week) {
 }
 
 let barangayRiskMap = null;
+let barangayRiskLayer = null;
+let barangayRiskLegend = null;
 async function loadBarangayRiskMap(year, week) {
     try {
         const { data, error } = await supabaseClient
@@ -576,14 +578,10 @@ async function loadBarangayRiskMap(year, week) {
             }).addTo(barangayRiskMap);
         }
 
-        // Remove old layers
-        barangayRiskMap.eachLayer(layer => {
-            if (layer instanceof L.GeoJSON) {
-                barangayRiskMap.removeLayer(layer);
-            }
-        });
-
-        L.geoJSON(geojsonData, {
+        if (barangayRiskLayer) {
+            barangayRiskMap.removeLayer(barangayRiskLayer);
+        }
+        barangayRiskLayer = L.geoJSON(geojsonData, {
             style: feature => ({
                 color: '#1e3c72',
                 weight: 0.5,
@@ -592,7 +590,9 @@ async function loadBarangayRiskMap(year, week) {
                 fillOpacity: 1
             }),
             onEachFeature: (feature, layer) => {
-                layer.bindPopup(`<b>${feature.properties.name}</b><br>Risk: ${feature.properties.risk_classification}`);
+                layer.bindPopup(
+                    `<b>${feature.properties.name}</b><br>Risk: ${feature.properties.risk_classification}`
+                );
                 layer.on({
                     mouseover: e => e.target.setStyle({ weight: 3 }),
                     mouseout: e => e.target.setStyle({ weight: 0.5 })
@@ -600,26 +600,37 @@ async function loadBarangayRiskMap(year, week) {
             }
         }).addTo(barangayRiskMap);
 
-        const legend = L.control({ position: 'bottomright' });
+        // Remove old legend
+        if (barangayRiskLegend) {
+            barangayRiskMap.removeControl(barangayRiskLegend);
+        }
 
-        legend.onAdd = function () {
+        // Add updated legend
+        barangayRiskLegend = L.control({ position: 'bottomright' });
+        barangayRiskLegend.onAdd = function () {
             const div = L.DomUtil.create('div', 'info legend');
+
             const riskLevels = ["Low Risk", "Moderate Risk", "High Risk", "No Data"];
             const colors = ["#2ECC71", "#FFD700", "#FF6347", "#808080"];
 
-            for (let i = 0; i < riskLevels.length; i++) {
+            riskLevels.forEach((level, i) => {
                 div.innerHTML += `
-                    <span style="display: inline-flex; align-items: center; margin-right: 10px;">
-                        <i style="background:${colors[i]}; border:1px solid #000; width:10px; height:10px; display:inline-block; margin-right:3px;"></i>
-                        ${riskLevels[i]}
-                    </span>
+                    <div style="margin-bottom:4px;">
+                        <i style="
+                            background:${colors[i]};
+                            width:12px; height:12px; 
+                            display:inline-block;
+                            border:1px solid #000;
+                            margin-right:4px;
+                        "></i>
+                        ${level}
+                    </div>
                 `;
-            }
-
+            });
             return div;
         };
 
-        legend.addTo(barangayRiskMap);
+        barangayRiskLegend.addTo(barangayRiskMap);
     } catch (err) {
         console.error('Error loading barangayRiskMap:', err);
     }
