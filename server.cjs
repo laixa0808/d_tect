@@ -952,7 +952,7 @@ app.patch('/api/users/:id/toggle', async (req, res) => {
         return res.status(500).json({ success: false, message: 'Failed to fetch admins.' });
       }
 
-      if (enabledAdmins.length <= 3) {
+      if (enabledAdmins.length <= 2) {
         return res.status(400).json({
           success: false,
           message: 'Cannot disable this user. At least two Account Administrators must remain enabled.'
@@ -1006,7 +1006,7 @@ app.delete('/api/users/:id', async (req, res) => {
         return res.status(500).json({ success: false, message: 'Error checking administrators.' });
       }
 
-      if (admins.length <= 3) {
+      if (admins.length <= 2) {
         return res.status(400).json({ 
           success: false, 
           message: 'Cannot delete this user. At least two Account Administrators must remain.' 
