@@ -994,7 +994,7 @@ async function loadContactDetails() {
             <p>
             ${row.address}<br>
             ${row.phone ? `Phone: <a href="tel:${row.phone}">${row.phone}</a><br>` : ''}
-            ${row.email ? `Email: <a href="mailto:${row.email}">${row.email}</a><br>` : ''}
+            ${row.email ? `Email: <a href="https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(row.email)}">${row.email}</a><br>` : ''}
             </p>`;
 
         container.appendChild(block);
